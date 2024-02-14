@@ -20,21 +20,20 @@ fn main() {
     let guest_eating = Arc::new(Mutex::new(N));
 
     for guest in 0..N {
-        let me = guest;
         let labyrinth = labyrinth.clone();
         let guest_eating = guest_eating.clone();
         thread::spawn(move || loop {
-            if *guest_eating.lock().unwrap() == me {
+            if *guest_eating.lock().unwrap() == guest {
                 let mut labyrinth = labyrinth.lock().unwrap();
-                if !labyrinth.have_eaten[me] {
+                if !labyrinth.have_eaten[guest] {
                     if !labyrinth.is_cupcake_available {
                         // guest requests a cupcake
                         labyrinth.is_cupcake_available = true;
                     }
-                    labyrinth.have_eaten[me] = true;
+                    labyrinth.have_eaten[guest] = true;
                     labyrinth.num_guests_who_ate += 1;
                     labyrinth.is_cupcake_available = false;
-                    println!("Guest {} has eaten", me);
+                    println!("Guest {} has eaten", guest);
                 }
             }
         });
